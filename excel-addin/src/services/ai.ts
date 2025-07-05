@@ -1,4 +1,4 @@
-import { supabaseClient } from '../../../lib/supabase'
+import { supabaseClient } from './supabase'
 
 interface AIResponse {
   success: boolean

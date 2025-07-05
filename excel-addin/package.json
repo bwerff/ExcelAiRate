@@ -4,16 +4,16 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite --https",
+    "dev": "vite",
     "build": "tsc && vite build",
-    "preview": "vite preview --https",
+    "preview": "vite preview",
     "office:validate": "office-addin-manifest validate manifest.xml",
     "office:start": "office-addin-debugging start manifest.xml desktop --dev-server-port 5173"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.39.0",
     "@types/office-js": "^1.0.514",
-    "office-js": "^1.1.0",
+    "office-js": "^0.1.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },

@@ -10,7 +10,11 @@
       "Bash(mkdir:*)",
       "Bash(tree:*)",
       "WebFetch(domain:supabase.com)",
-      "Bash(touch:*)"
+      "Bash(touch:*)",
+      "Bash(pnpm dev:*)",
+      "Bash(pnpm add:*)",
+      "Bash(sudo pnpm install:*)",
+      "Bash(pnpm build:*)"
     ],
     "deny": []
   }

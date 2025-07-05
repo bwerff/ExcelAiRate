@@ -1,5 +1,5 @@
 import React, { useState, useCallback } from 'react'
-import { Button, Card, CardContent, TextArea, Alert, Input } from '../../shared/components'
+import { Button, Card, CardContent, TextArea, Alert, Input } from '@shared/components'
 import { aiService } from './services/ai'
 import { authService } from './services/auth'
 import './App.css'
@@ -32,7 +32,7 @@ export default function App() {
       await authService.signIn(email)
       setAuthMessage('Check your email for the magic link to sign in!')
     } catch (err) {
-      setError(err.message || 'Failed to send magic link')
+      setError(err instanceof Error ? err.message : 'Failed to send magic link')
     } finally {
       setAuthLoading(false)
     }
@@ -77,7 +77,7 @@ export default function App() {
         await insertGeneratedData(response)
       }
     } catch (err) {
-      setError(err.message || `Failed to ${operation} data`)
+      setError(err instanceof Error ? err.message : `Failed to ${operation} data`)
     } finally {
       setLoading(false)
     }
@@ -129,8 +129,8 @@ export default function App() {
               label="Email"
               placeholder="your@email.com"
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              onKeyDown={(e) => e.key === 'Enter' && handleAuth()}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => setEmail(e.target.value)}
+              onKeyDown={(e: React.KeyboardEvent) => e.key === 'Enter' && handleAuth()}
             />
             
             <Button
@@ -210,7 +210,7 @@ export default function App() {
                 : "Explain what this data represents"
             }
             value={prompt}
-            onChange={(e) => setPrompt(e.target.value)}
+            onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setPrompt(e.target.value)}
             rows={3}
           />
 

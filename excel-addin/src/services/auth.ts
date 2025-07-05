@@ -1,4 +1,4 @@
-import { supabaseClient } from '../../../lib/supabase'
+import { supabaseClient } from './supabase'
 
 class AuthService {
   async signIn(email: string): Promise<void> {

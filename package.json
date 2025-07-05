@@ -8,6 +8,10 @@
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "check-types": "turbo run check-types"
   },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.47.10",
+    "@types/node": "^22.10.2"
+  },
   "devDependencies": {
     "prettier": "^3.6.0",
     "turbo": "^2.5.4",
