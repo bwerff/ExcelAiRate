@@ -1,6 +1,7 @@
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts'
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 import Stripe from 'https://esm.sh/stripe@14.0.0'
+import { getCorsHeaders, corsResponse } from '../_shared/cors.ts'
 
 const PLAN_LIMITS = {
   free: { queries: 10 },
@@ -9,6 +10,13 @@ const PLAN_LIMITS = {
 }
 
 serve(async (req) => {
+  const origin = req.headers.get('origin')
+  
+  // Handle OPTIONS request for CORS
+  if (req.method === 'OPTIONS') {
+    return corsResponse(origin)
+  }
+  
   try {
     // Initialize services
     const supabaseUrl = Deno.env.get('SUPABASE_URL')!
@@ -27,7 +35,10 @@ serve(async (req) => {
     try {
       event = stripe.webhooks.constructEvent(body, signature, webhookSecret)
     } catch (err) {
-      return new Response('Webhook signature verification failed', { status: 400 })
+      return new Response('Webhook signature verification failed', { 
+        status: 400,
+        headers: getCorsHeaders(origin)
+      })
     }
 
     // Handle events
@@ -109,14 +120,14 @@ serve(async (req) => {
 
     return new Response(JSON.stringify({ received: true }), {
       status: 200,
-      headers: { 'Content-Type': 'application/json' }
+      headers: { ...getCorsHeaders(origin), 'Content-Type': 'application/json' }
     })
 
   } catch (error) {
     console.error('Webhook error:', error)
     return new Response(
       JSON.stringify({ error: error.message }),
-      { status: 500, headers: { 'Content-Type': 'application/json' } }
+      { status: 500, headers: { ...getCorsHeaders(origin), 'Content-Type': 'application/json' } }
     )
   }
 })

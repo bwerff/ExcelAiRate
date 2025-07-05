@@ -190,7 +190,7 @@ BEGIN
   -- Count usage in period
   SELECT COUNT(*) INTO usage_count
   FROM usage_logs
-  WHERE user_id = user_id
+  WHERE usage_logs.user_id = get_usage_stats.user_id
     AND created_at >= period_start;
   
   RETURN json_build_object(

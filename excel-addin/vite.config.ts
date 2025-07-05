@@ -18,7 +18,11 @@ export default defineConfig({
     https: true,
     port: 5173,
     headers: {
-      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Origin": "https://localhost:3000",
+    },
+    cors: {
+      origin: ['https://localhost:3000', 'https://localhost:5173', 'https://excel.office.com'],
+      credentials: true
     }
   },
   build: {

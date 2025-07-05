@@ -2,6 +2,7 @@ import React, { useState, useCallback } from 'react'
 import { Button, Card, CardContent, TextArea, Alert, Input } from './components'
 import { aiService } from './services/ai'
 import { authService } from './services/auth'
+import type { AIResponse } from '../../shared/types'
 import './App.css'
 
 type OperationType = 'analyze' | 'generate' | 'explain'
@@ -12,7 +13,7 @@ export default function App() {
   const [operation, setOperation] = useState<OperationType>('analyze')
   const [prompt, setPrompt] = useState('')
   const [selectedData, setSelectedData] = useState('')
-  const [result, setResult] = useState<any>(null)
+  const [result, setResult] = useState<AIResponse | null>(null)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const [authLoading, setAuthLoading] = useState(false)
@@ -73,8 +74,8 @@ export default function App() {
       const response = await aiService[operation](prompt, selectedData)
       setResult(response)
 
-      if (operation === 'generate' && response) {
-        await insertGeneratedData(response)
+      if (operation === 'generate' && response && 'content' in response) {
+        await insertGeneratedData(response.content)
       }
     } catch (err) {
       setError(err instanceof Error ? err.message : `Failed to ${operation} data`)
@@ -232,7 +233,7 @@ export default function App() {
             <div className="mt-4">
               <h3 className="font-medium text-gray-900 mb-2">Result:</h3>
               <div className="p-3 bg-gray-50 rounded text-sm">
-                {operation === 'analyze' ? (
+                {operation === 'analyze' && 'summary' in result ? (
                   <div>
                     <p className="font-medium mb-2">{result.summary}</p>
                     {result.insights && (
@@ -256,10 +257,24 @@ export default function App() {
                       </>
                     )}
                   </div>
+                ) : operation === 'generate' && 'content' in result ? (
+                  <pre className="whitespace-pre-wrap">{result.content}</pre>
+                ) : operation === 'explain' && 'explanation' in result ? (
+                  <div>
+                    <p className="mb-2">{result.explanation}</p>
+                    {result.examples && (
+                      <>
+                        <h4 className="font-medium mt-3 mb-1">Examples:</h4>
+                        <ul className="list-disc list-inside space-y-1">
+                          {result.examples.map((example: string, i: number) => (
+                            <li key={i}>{example}</li>
+                          ))}
+                        </ul>
+                      </>
+                    )}
+                  </div>
                 ) : (
-                  <pre className="whitespace-pre-wrap">{
-                    typeof result === 'string' ? result : JSON.stringify(result, null, 2)
-                  }</pre>
+                  <pre className="whitespace-pre-wrap">{JSON.stringify(result, null, 2)}</pre>
                 )}
               </div>
             </div>

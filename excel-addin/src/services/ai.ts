@@ -1,33 +1,23 @@
 import { supabaseClient } from './supabase'
-
-interface AIResponse {
-  success: boolean
-  result: any
-  cached?: boolean
-  usage?: {
-    tokens: number
-    response_time_ms: number
-  }
-  error?: string
-}
+import type { AIServiceResponse, AIAnalyzeResponse, AIGenerateResponse, AIExplainResponse } from '../../../shared/types'
 
 class AIService {
-  async analyze(prompt: string, data: string): Promise<any> {
+  async analyze(prompt: string, data: string): Promise<AIAnalyzeResponse> {
     const response = await this.makeRequest('analyze', prompt, data)
-    return response.result
+    return response.result as AIAnalyzeResponse
   }
 
-  async generate(prompt: string): Promise<string> {
+  async generate(prompt: string): Promise<AIGenerateResponse> {
     const response = await this.makeRequest('generate', prompt)
-    return response.result
+    return response.result as AIGenerateResponse
   }
 
-  async explain(prompt: string, data: string): Promise<string> {
+  async explain(prompt: string, data: string): Promise<AIExplainResponse> {
     const response = await this.makeRequest('explain', prompt, data)
-    return response.result
+    return response.result as AIExplainResponse
   }
 
-  private async makeRequest(type: string, prompt: string, data?: string): Promise<AIResponse> {
+  private async makeRequest(type: string, prompt: string, data?: string): Promise<AIServiceResponse> {
     const { data: { session } } = await supabaseClient.auth.getSession()
     
     if (!session) {

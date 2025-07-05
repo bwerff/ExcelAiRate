@@ -1,11 +1,7 @@
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts'
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 import Stripe from 'https://esm.sh/stripe@14.0.0'
-
-const corsHeaders = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
-}
+import { getCorsHeaders, corsResponse } from '../_shared/cors.ts'
 
 // Simplified pricing - hardcoded for easy maintenance
 const PRICES = {
@@ -26,9 +22,13 @@ const PLAN_LIMITS = {
 }
 
 serve(async (req) => {
+  const origin = req.headers.get('origin')
+  
   if (req.method === 'OPTIONS') {
-    return new Response('ok', { headers: corsHeaders })
+    return corsResponse(origin)
   }
+  
+  const corsHeaders = getCorsHeaders(origin)
 
   try {
     // Initialize services

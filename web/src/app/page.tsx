@@ -2,9 +2,9 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
-import { Button, Card, CardContent, CardHeader, CardTitle } from '../../shared/components'
-import { useAuthStore } from '../store/auth'
-import { PRICING_PLANS } from '../../lib/pricing'
+import { Button, Card, CardContent, CardHeader, CardTitle } from '@/components'
+import { useAuthStore } from '@/store/auth'
+import { PRICING_PLANS } from '@/lib/pricing'
 
 export default function Home() {
   const { user } = useAuthStore()

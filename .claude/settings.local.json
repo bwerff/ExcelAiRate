@@ -30,7 +30,9 @@
       "Bash(pnpm check-types:*)",
       "Bash(pnpm tsc:*)",
       "Bash(pnpm:*)",
-      "Bash(npm view:*)"
+      "Bash(npm view:*)",
+      "Bash(rg:*)",
+      "Bash(ln:*)"
     ],
     "deny": []
   }

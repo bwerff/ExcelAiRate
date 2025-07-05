@@ -8,6 +8,9 @@ export function createSupabaseClient() {
   return createClient(supabaseUrl, supabaseAnonKey)
 }
 
+// Export singleton instance for compatibility
+export const supabaseClient = createSupabaseClient()
+
 // Auth helpers
 export const auth = {
   // Magic link sign in

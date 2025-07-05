@@ -2,11 +2,11 @@
 
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { Button, Card, CardContent, CardHeader, CardTitle, Alert } from '../../../shared/components'
+import { Button, Card, CardContent, CardHeader, CardTitle, Alert } from '@/components'
 import { useAuthStore } from '../../store/auth'
-import { stripeCheckout } from '../../../lib/stripe'
-import { PRICING_PLANS } from '../../../lib/pricing'
-import { supabaseClient } from '../../../lib/supabase'
+import { stripe } from '@/lib/stripe'
+import { PRICING_PLANS } from '@/lib/pricing'
+import { supabaseClient } from '@/lib/supabase'
 
 export default function Account() {
   const router = useRouter()
@@ -37,13 +37,11 @@ export default function Account() {
   const handleUpgrade = async (plan: 'pro' | 'team') => {
     setLoading(true)
     try {
-      const { sessionId } = await stripeCheckout.createSession({
-        plan,
-        userId: user.id,
-        userEmail: user.email
-      })
+      const { url } = await stripe.createCheckout(plan)
       
-      await stripeCheckout.redirectToCheckout(sessionId)
+      if (url) {
+        window.location.href = url
+      }
     } catch (error) {
       console.error('Upgrade error:', error)
       alert('Failed to start upgrade process. Please try again.')

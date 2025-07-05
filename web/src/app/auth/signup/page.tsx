@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
-import { Button, Card, CardContent, CardHeader, CardTitle, Input, Alert } from '../../../../shared/components'
+import { Button, Card, CardContent, CardHeader, CardTitle, Input, Alert } from '@/components'
 import { useAuthStore } from '../../../store/auth'
 
 export default function SignUp() {

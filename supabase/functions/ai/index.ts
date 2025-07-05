@@ -3,11 +3,7 @@
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts'
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 import OpenAI from 'https://esm.sh/openai@latest'
-
-const corsHeaders = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
-}
+import { getCorsHeaders, corsResponse } from '../_shared/cors.ts'
 
 interface AIRequest {
   type: 'analyze' | 'generate' | 'explain'
@@ -20,8 +16,11 @@ interface AIRequest {
 }
 
 serve(async (req: Request) => {
+  const origin = req.headers.get('origin')
+  const corsHeaders = getCorsHeaders(origin)
+  
   if (req.method === 'OPTIONS') {
-    return new Response('ok', { headers: corsHeaders })
+    return corsResponse(origin)
   }
 
   try {
@@ -112,7 +111,7 @@ serve(async (req: Request) => {
         max_tokens: type === 'explain' ? 500 : 2000,
         ...(type === 'analyze' && { response_format: { type: 'json_object' } })
       })
-    } catch (openaiError: any) {
+    } catch (openaiError) {
       console.error('OpenAI API error:', openaiError)
       
       // Handle specific OpenAI errors
@@ -190,11 +189,12 @@ serve(async (req: Request) => {
       { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     )
 
-  } catch (error: any) {
+  } catch (error) {
     console.error('AI function error:', error)
+    const errorMessage = error instanceof Error ? error.message : 'Internal server error'
     return new Response(
       JSON.stringify({ 
-        error: error?.message || 'Internal server error',
+        error: errorMessage,
         code: 'INTERNAL_ERROR' 
       }),
       { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
@@ -254,11 +254,11 @@ function getUserPrompt(type: string, prompt: string, data?: string): string {
 }
 
 async function logUsage(
-  supabase: any,
+  supabase: ReturnType<typeof createClient>,
   userId: string,
   actionType: string,
   prompt: string,
-  response: any,
+  response: Record<string, unknown>,
   model: string,
   tokens: number,
   responseTime: number,

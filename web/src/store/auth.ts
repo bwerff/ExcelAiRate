@@ -1,5 +1,5 @@
 import { create } from 'zustand'
-import { supabaseClient } from '../../lib/supabase'
+import { supabaseClient } from '@/lib/supabase'
 
 interface User {
   id: string
@@ -38,8 +38,9 @@ export const useAuthStore = create<AuthStore>((set) => ({
       if (error) throw error
       
       set({ loading: false })
-    } catch (error: any) {
-      set({ error: error.message, loading: false })
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'Authentication failed'
+      set({ error: errorMessage, loading: false })
       throw error
     }
   },
@@ -51,8 +52,9 @@ export const useAuthStore = create<AuthStore>((set) => ({
       if (error) throw error
       
       set({ user: null, loading: false })
-    } catch (error: any) {
-      set({ error: error.message, loading: false })
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'Sign out failed'
+      set({ error: errorMessage, loading: false })
       throw error
     }
   },
@@ -82,8 +84,9 @@ export const useAuthStore = create<AuthStore>((set) => ({
       } else {
         set({ user: null, loading: false })
       }
-    } catch (error: any) {
-      set({ error: error.message, loading: false })
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'Session check failed'
+      set({ error: errorMessage, loading: false })
     }
   },
 

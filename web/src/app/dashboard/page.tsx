@@ -2,15 +2,15 @@
 
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { Button, Card, CardContent, CardHeader, CardTitle, Alert } from '../../../shared/components'
+import { Button, Card, CardContent, CardHeader, CardTitle, Alert } from '@/components'
 import { useAuthStore } from '../../store/auth'
-import { supabaseClient } from '../../../lib/supabase'
+import { supabaseClient } from '@/lib/supabase'
 
 interface UsageLog {
   id: string
   action_type: string
   prompt: string
-  response: any
+  response: Record<string, unknown>
   created_at: string
   from_cache: boolean
 }
