@@ -30,5 +30,8 @@
     "allowSyntheticDefaultImports": true,
     "forceConsistentCasingInFileNames": true
   },
-  "exclude": ["node_modules", "dist", ".next", ".turbo"]
+  "exclude": ["node_modules", "dist", ".next", ".turbo"],
+  "references": [
+    { "path": "./supabase/functions/ai" }
+  ]
 }

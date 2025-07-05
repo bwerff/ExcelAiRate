@@ -26,7 +26,11 @@
       "Bash(cp:*)",
       "Bash(./node_modules/.bin/vite:*)",
       "Bash(git rm:*)",
-      "Bash(grep:*)"
+      "Bash(grep:*)",
+      "Bash(pnpm check-types:*)",
+      "Bash(pnpm tsc:*)",
+      "Bash(pnpm:*)",
+      "Bash(npm view:*)"
     ],
     "deny": []
   }

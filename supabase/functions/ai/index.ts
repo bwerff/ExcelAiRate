@@ -1,6 +1,8 @@
+// Deno Edge Function for Supabase
+// @deno-types="https://deno.land/x/types/react/index.d.ts"
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts'
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
-import { Configuration, OpenAIApi } from 'https://esm.sh/openai@4.24.0'
+import OpenAI from 'https://esm.sh/openai@latest'
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -17,7 +19,7 @@ interface AIRequest {
   }
 }
 
-serve(async (req) => {
+serve(async (req: Request) => {
   if (req.method === 'OPTIONS') {
     return new Response('ok', { headers: corsHeaders })
   }
@@ -53,7 +55,7 @@ serve(async (req) => {
 
     // Parse request
     const { type, prompt, data, options = {} } = await req.json() as AIRequest
-    const model = options.model || 'gpt-3.5-turbo'
+    const model = options.model || 'gpt-4o-mini'
     const temperature = options.temperature || 0.7
 
     // Create cache key
@@ -91,28 +93,63 @@ serve(async (req) => {
 
     // Call OpenAI
     const openaiKey = Deno.env.get('OPENAI_API_KEY')!
-    const openai = new OpenAIApi(new Configuration({ apiKey: openaiKey }))
+    const openai = new OpenAI({ apiKey: openaiKey })
 
     const systemPrompt = getSystemPrompt(type)
     const userPrompt = getUserPrompt(type, prompt, data)
 
     const startTime = Date.now()
-    const completion = await openai.createChatCompletion({
-      model,
-      messages: [
-        { role: 'system', content: systemPrompt },
-        { role: 'user', content: userPrompt }
-      ],
-      temperature,
-      max_tokens: type === 'explain' ? 500 : 2000,
-      ...(type === 'analyze' && { response_format: { type: 'json_object' } })
-    })
+    let completion
+    
+    try {
+      completion = await openai.chat.completions.create({
+        model,
+        messages: [
+          { role: 'system', content: systemPrompt },
+          { role: 'user', content: userPrompt }
+        ],
+        temperature,
+        max_tokens: type === 'explain' ? 500 : 2000,
+        ...(type === 'analyze' && { response_format: { type: 'json_object' } })
+      })
+    } catch (openaiError: any) {
+      console.error('OpenAI API error:', openaiError)
+      
+      // Handle specific OpenAI errors
+      if (openaiError.status === 429) {
+        return new Response(
+          JSON.stringify({ 
+            error: 'OpenAI rate limit exceeded. Please try again later.',
+            code: 'OPENAI_RATE_LIMIT'
+          }),
+          { status: 429, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        )
+      } else if (openaiError.status === 401) {
+        return new Response(
+          JSON.stringify({ 
+            error: 'OpenAI API key invalid',
+            code: 'OPENAI_AUTH_ERROR'
+          }),
+          { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        )
+      } else if (openaiError.status === 400) {
+        return new Response(
+          JSON.stringify({ 
+            error: 'Invalid request to OpenAI API',
+            code: 'OPENAI_BAD_REQUEST'
+          }),
+          { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        )
+      }
+      
+      throw openaiError
+    }
 
-    const result = completion.data.choices[0]?.message?.content
+    const result = completion.choices[0]?.message?.content
     if (!result) throw new Error('No response from AI')
 
     const responseTime = Date.now() - startTime
-    const tokens = completion.data.usage?.total_tokens || 0
+    const tokens = completion.usage?.total_tokens || 0
 
     // Parse result for analysis type
     let parsedResult = result
@@ -153,11 +190,11 @@ serve(async (req) => {
       { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     )
 
-  } catch (error) {
+  } catch (error: any) {
     console.error('AI function error:', error)
     return new Response(
       JSON.stringify({ 
-        error: error.message || 'Internal server error',
+        error: error?.message || 'Internal server error',
         code: 'INTERNAL_ERROR' 
       }),
       { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
