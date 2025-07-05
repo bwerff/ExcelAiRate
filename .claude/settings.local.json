@@ -24,7 +24,9 @@
       "Bash(npx vite:*)",
       "Bash(node:*)",
       "Bash(cp:*)",
-      "Bash(./node_modules/.bin/vite:*)"
+      "Bash(./node_modules/.bin/vite:*)",
+      "Bash(git rm:*)",
+      "Bash(grep:*)"
     ],
     "deny": []
   }
