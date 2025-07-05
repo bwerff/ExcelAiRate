@@ -8,7 +8,7 @@ import { PRICING_PLANS } from '@/lib/pricing'
 
 export default function Home() {
   const { user } = useAuthStore()
-  const [loading, setLoading] = useState(false)
+  const [loading] = useState(false)
 
   const handleGetStarted = async () => {
     if (user) {
@@ -125,15 +125,15 @@ export default function Home() {
                     {key.charAt(0).toUpperCase() + key.slice(1)}
                   </CardTitle>
                   <p className="text-3xl font-bold mt-2">
-                    ${plan.price}
-                    {plan.price > 0 && <span className="text-lg font-normal">/month</span>}
+                    ${(plan as any).price}
+                    {(plan as any).price > 0 && <span className="text-lg font-normal">/month</span>}
                   </p>
                 </CardHeader>
                 <CardContent>
                   <ul className="space-y-3">
                     <li className="flex items-start">
                       <span className="text-green-500 mr-2">✓</span>
-                      <span>{plan.limits.queries} AI queries per month</span>
+                      <span>{(plan as any).limits.queries} AI queries per month</span>
                     </li>
                     <li className="flex items-start">
                       <span className="text-green-500 mr-2">✓</span>
