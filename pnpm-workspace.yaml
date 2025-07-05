@@ -1,6 +1,3 @@
 packages:
   - "excel-addin"
   - "web"
-  - "ui"
-  - "eslint-config"
-  - "typescript-config"

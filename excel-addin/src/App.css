@@ -1,0 +1,17 @@
+.app-container {
+  padding: 1rem;
+  min-height: 100vh;
+  background-color: #f9fafb;
+}
+
+h1 {
+  color: #111827;
+}
+
+button {
+  cursor: pointer;
+}
+
+button:disabled {
+  cursor: not-allowed;
+}

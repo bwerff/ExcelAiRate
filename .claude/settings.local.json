@@ -5,7 +5,12 @@
       "Bash(mv:*)",
       "Bash(rm:*)",
       "Bash(ls:*)",
-      "Bash(pnpm install:*)"
+      "Bash(pnpm install:*)",
+      "Bash(npm install:*)",
+      "Bash(mkdir:*)",
+      "Bash(tree:*)",
+      "WebFetch(domain:supabase.com)",
+      "Bash(touch:*)"
     ],
     "deny": []
   }

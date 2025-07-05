@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Repository Overview
 
-This is an AI-powered Excel Assistant monorepo built with Turborepo. The project aims to create the world's first native AI-powered Excel Add-in that transforms spreadsheet users into data scientists through natural language processing.
+This is an AI-powered Excel Assistant built with a simplified architecture. The project provides natural language AI analysis for Excel data using Supabase as the backend and OpenAI for AI capabilities.
 
 ## Tech Stack
 
@@ -13,19 +13,24 @@ This is an AI-powered Excel Assistant monorepo built with Turborepo. The project
 - **Frontend**: 
   - Web Dashboard: Next.js 15.3.5 with React 19, TailwindCSS v4
   - Excel Add-in: Vite with TypeScript and Office.js
+- **Backend**: Supabase (PostgreSQL, Auth, Edge Functions)
+- **AI**: OpenAI GPT-4 Turbo
+- **Payments**: Stripe Checkout
 - **Node Version**: >=18
 
-## Project Structure
+## Project Structure (Simplified)
 
 ```
-apps/
-├── excel-addin/    # Microsoft Excel Add-in built with Vite and Office.js
-└── web/           # Next.js web application for dashboard/admin
-
-packages/
-├── ui/            # Shared React UI components (@repo/ui)
-├── eslint-config/ # Shared ESLint configurations
-└── typescript-config/ # Shared TypeScript configurations
+excel-addin/       # Microsoft Excel Add-in (Vite + Office.js)
+web/              # Next.js web dashboard
+lib/              # Shared libraries (supabase.ts, pricing.ts)
+supabase/         # Backend
+├── migrations/   # Database schema (4 tables)
+└── functions/    # Edge Functions
+    ├── ai/              # Unified AI endpoint
+    ├── stripe-checkout/ # Create payment sessions
+    ├── stripe-portal/   # Manage subscriptions
+    └── stripe-webhook/  # Handle Stripe events
 ```
 
 ## Common Commands
@@ -39,8 +44,8 @@ pnpm install
 pnpm dev
 
 # Run specific app
-pnpm --filter excel-addin dev
-pnpm --filter web dev
+pnpm --filter @excelairate/web dev
+pnpm --filter @excelairate/excel-addin dev
 ```
 
 ### Build & Production
@@ -48,17 +53,13 @@ pnpm --filter web dev
 # Build all packages
 pnpm build
 
-# Build specific app
-pnpm --filter excel-addin build
-pnpm --filter web build
-
-# Start production server (web app only)
-pnpm --filter web start
+# Start production server (web only)
+pnpm --filter @excelairate/web start
 ```
 
 ### Code Quality
 ```bash
-# Run linting across all packages
+# Run linting
 pnpm lint
 
 # Format code with Prettier
@@ -70,45 +71,40 @@ pnpm check-types
 
 ## Architecture Overview
 
-### Core Product Features
-1. **AI Data Analysis**: Natural language analysis of Excel data with structured insights
-2. **Content Generation**: AI-powered content creation for Excel worksheets
-3. **User Authentication & Subscription**: Secure accounts with subscription-based access
+### Simplified Design
+- **4 Database Tables**: profiles, usage_logs, ai_cache, templates
+- **Single AI Endpoint**: /ai handles analyze, generate, and explain
+- **Magic Link Auth**: No passwords, just email OTP
+- **3-Tier Pricing**: Free (10), Pro ($29/500), Team ($99/5000)
+- **Stripe Managed**: All subscription logic handled by Stripe
 
-### Service Architecture
-The application follows a microservices architecture with:
-- Event-driven architecture for scalability
-- Multi-layer caching strategy for performance
-- Zero-trust security model
-
-### Data Architecture
-- Primary Database: Supabase PostgreSQL with Row Level Security (is this needed?)
-- Cache Layer: Redis
-- AI Integration: OpenAI GPT-4 Turbo
-- Payment Processing: Stripe
+### Key Features
+- Natural language Excel data analysis
+- AI-powered content generation
+- Response caching for 60% cost reduction
+- Usage tracking and limits
+- Template library with full-text search
 
 ## Development Guidelines
 
-### Monorepo Workflow
-- Dependencies between packages are managed automatically
-- Use `pnpm --filter <package-name>` to run commands in specific packages
+### Database
+- Uses Supabase PostgreSQL with Row Level Security
+- Simple schema focused on MVP functionality
+- No complex types or vector search for now
 
-### Excel Add-in Development
-- Uses Office.js for Excel integration
-- Vite for fast development and HMR
-- TypeScript for type safety
-- Compatible with Excel 2016+, Excel Online, Excel Mobile
+### Authentication
+- Magic link only (signInWithOtp)
+- No password management
+- Automatic profile creation on signup
 
-### Web Dashboard Development
-- Next.js 15 with App Router
-- React 19 with Server Components
-- TailwindCSS v4 for styling
-- TypeScript for type safety
+### AI Integration
+- Single Edge Function handles all AI operations
+- Automatic response caching
+- Usage tracking per user
 
-## Important Notes
+### Important Notes
 
 - No testing framework is currently configured
 - The project uses cutting-edge versions (React 19, Next.js 15, TailwindCSS 4)
-- Build outputs are configured for `.next/**` in turbo.json
-- All packages use TypeScript with shared configurations
 - NEVER BY ANY MEANS USE 'any' TYPE IN TYPESCRIPT
+- Keep the architecture simple - avoid adding complexity unless absolutely necessary
