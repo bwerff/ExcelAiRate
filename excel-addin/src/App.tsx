@@ -1,5 +1,5 @@
 import React, { useState, useCallback } from 'react'
-import { Button, Card, CardContent, TextArea, Alert, Input } from '@shared/components'
+import { Button, Card, CardContent, TextArea, Alert, Input } from './components'
 import { aiService } from './services/ai'
 import { authService } from './services/auth'
 import './App.css'

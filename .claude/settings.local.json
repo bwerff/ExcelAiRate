@@ -14,7 +14,17 @@
       "Bash(pnpm dev:*)",
       "Bash(pnpm add:*)",
       "Bash(sudo pnpm install:*)",
-      "Bash(pnpm build:*)"
+      "Bash(pnpm build:*)",
+      "Bash(pnpm --filter @excelairate/excel-addin build)",
+      "Bash(pnpm --filter shared check-types)",
+      "Bash(true)",
+      "Bash(npx tsc:*)",
+      "Bash(pnpm run:*)",
+      "Bash(pnpm -w run build)",
+      "Bash(npx vite:*)",
+      "Bash(node:*)",
+      "Bash(cp:*)",
+      "Bash(./node_modules/.bin/vite:*)"
     ],
     "deny": []
   }

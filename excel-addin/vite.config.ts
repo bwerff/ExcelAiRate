@@ -14,11 +14,6 @@ export default defineConfig({
       certDir: './.cert'
     })
   ],
-  resolve: {
-    alias: {
-      '@shared': path.resolve(__dirname, '../shared')
-    }
-  },
   server: {
     https: true,
     port: 5173,
@@ -28,10 +23,7 @@ export default defineConfig({
   },
   build: {
     rollupOptions: {
-      input: {
-        main: 'index.html',
-        runtime: 'runtime.html'
-      }
+      input: 'index.html'
     }
   }
 })
