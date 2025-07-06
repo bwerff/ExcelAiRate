@@ -7,15 +7,15 @@ import path from 'path'
 export default defineConfig({
   plugins: [
     react(),
-    // Enable HTTPS for Office Add-in development
-    basicSsl({
-      name: 'excelairate',
-      domains: ['localhost'],
-      certDir: './.cert'
-    })
+    // Enable HTTPS for Office Add-in development (temporarily disabled)
+    // basicSsl({
+    //   name: 'excelairate',
+    //   domains: ['localhost'],
+    //   certDir: './.cert'
+    // })
   ],
   server: {
-    https: true,
+    https: false,
     port: 5173,
     headers: {
       "Access-Control-Allow-Origin": "https://localhost:3000",

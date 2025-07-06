@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>ExcelAiRate</title>
+
+    <!-- Office JavaScript API -->
+    <script type="text/javascript" src="https://appsforoffice.microsoft.com/lib/1.1/hosted/office.js"></script>
+
+    <!-- Template styles -->
+    <link href="taskpane.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body class="ms-font-m ms-welcome ms-Fabric">
+    <header class="ms-welcome__header ms-bgColor-neutralLighter">
+        <img width="90" height="90" src="../../assets/logo-filled.png" alt="ExcelAiRate" title="ExcelAiRate" />
+        <h1 class="ms-font-su">ExcelAiRate</h1>
+    </header>
+    <section id="sideload-msg" class="ms-welcome__main">
+        <h2 class="ms-font-xl">Please sideload your add-in to see app body.</h2>
+    </section>
+    <main id="app-body" class="ms-welcome__main" style="display: none;">
+        <div id="auth-section" style="display: none;">
+            <h2 class="ms-font-xl">Sign In</h2>
+            <p>Enter your email to receive a magic link:</p>
+            <div class="ms-TextField">
+                <input type="email" id="email-input" class="ms-TextField-field" placeholder="your@email.com" />
+            </div>
+            <div role="button" id="sign-in" class="ms-welcome__action ms-Button ms-Button--hero ms-font-xl">
+                <span class="ms-Button-label">Send Magic Link</span>
+            </div>
+            <div id="auth-message" class="message" style="display: none;"></div>
+        </div>
+
+        <div id="main-section" style="display: none;">
+            <h2 class="ms-font-xl">AI Assistant</h2>
+            <div class="user-info">
+                <p>Signed in as: <span id="user-email"></span></p>
+                <p>Usage: <span id="usage-count">0</span> / <span id="usage-limit">10</span></p>
+            </div>
+            
+            <div class="action-section">
+                <h3>Analyze Selection</h3>
+                <p>Select cells in Excel and click analyze to get AI insights.</p>
+                <div role="button" id="analyze-selection" class="ms-welcome__action ms-Button ms-Button--hero ms-font-xl">
+                    <span class="ms-Button-label">Analyze</span>
+                </div>
+            </div>
+
+            <div class="action-section">
+                <h3>Generate Content</h3>
+                <div class="ms-TextField">
+                    <input type="text" id="generate-prompt" class="ms-TextField-field" placeholder="Describe what to generate..." />
+                </div>
+                <div role="button" id="generate-content" class="ms-welcome__action ms-Button ms-Button--hero ms-font-xl">
+                    <span class="ms-Button-label">Generate</span>
+                </div>
+            </div>
+
+            <div id="result-section" style="display: none;">
+                <h3>Result</h3>
+                <div id="result-content" class="result-box"></div>
+                <div role="button" id="insert-result" class="ms-welcome__action ms-Button ms-Button--hero ms-font-xl">
+                    <span class="ms-Button-label">Insert to Excel</span>
+                </div>
+            </div>
+
+            <div id="message" class="message" style="display: none;"></div>
+
+            <div class="footer-actions">
+                <div role="button" id="sign-out" class="ms-Button ms-Button--default">
+                    <span class="ms-Button-label">Sign Out</span>
+                </div>
+            </div>
+        </div>
+    </main>
+</body>
+
+</html>

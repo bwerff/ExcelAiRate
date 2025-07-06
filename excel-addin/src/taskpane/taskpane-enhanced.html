@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Excel AI Assistant</title>
+    
+    <!-- Office JavaScript API -->
+    <script type="text/javascript" src="https://appsforoffice.microsoft.com/lib/1/hosted/office.js"></script>
+    
+    <!-- Office UI Fabric -->
+    <link rel="stylesheet" href="https://static2.sharepointonline.com/files/fabric/office-ui-fabric-core/11.0.0/css/fabric.min.css" />
+    
+    <!-- Task pane CSS -->
+    <link rel="stylesheet" href="taskpane.css" />
+</head>
+<body class="ms-font-m ms-Fabric">
+    <div id="container">
+        <!-- Sign In Section -->
+        <section id="sign-in-section" style="display: none;">
+            <div class="auth-container">
+                <h2 class="ms-font-xl">Welcome to ExcelAiRate</h2>
+                <p class="ms-font-m">Sign in with your email to start using AI-powered features</p>
+                
+                <div class="form-group">
+                    <input type="email" id="email-input" class="ms-TextField-field" 
+                           placeholder="Enter your email address" />
+                </div>
+                
+                <button id="sign-in-button" class="ms-Button ms-Button--primary">
+                    <span class="ms-Button-label">Send Magic Link</span>
+                </button>
+                
+                <div id="message" class="message" style="display: none;"></div>
+            </div>
+        </section>
+        
+        <!-- Main Section -->
+        <section id="main-section" style="display: none;">
+            <!-- Header -->
+            <div id="header">
+                <h2 style="color: #0078d4; margin: 0;">Excel AI Assistant</h2>
+                <p style="margin: 5px 0 0 0; color: #666;">Powered by GPT-4o-mini</p>
+                <div class="user-info">
+                    <span id="user-email"></span>
+                    <button id="sign-out-button" class="ms-Button ms-Button--small">Sign Out</button>
+                </div>
+            </div>
+            
+            <!-- Statistics -->
+            <div id="stats">
+                <div>Calls: <span id="total-calls">0</span> | Tokens: <span id="total-tokens">0</span> | Cost: $<span id="total-cost">0.00</span></div>
+            </div>
+            
+            <!-- Chat Container -->
+            <div id="chat-container">
+                <div id="welcome-message" style="color: #666; font-style: italic;">
+                    Welcome! Try asking me to analyze your data, generate formulas, or help with Excel tasks.
+                </div>
+            </div>
+            
+            <!-- Input Section -->
+            <div id="input-section">
+                <textarea id="user-input" placeholder="Ask me anything about your Excel data..."></textarea>
+                <div class="button-row">
+                    <button id="send-btn" class="ms-Button ms-Button--primary">Send</button>
+                    <button id="clear-btn" class="ms-Button">Clear</button>
+                </div>
+            </div>
+            
+            <!-- Quick Actions -->
+            <div id="quick-actions">
+                <h4>Quick Actions</h4>
+                <div class="action-grid">
+                    <button class="quick-btn action-button" data-action="analyze-selection">
+                        📊 Analyze Selection
+                    </button>
+                    <button class="quick-btn action-button" data-action="summarize-sheet">
+                        📄 Summarize Sheet
+                    </button>
+                    <button class="quick-btn action-button" data-action="find-patterns">
+                        🔍 Find Patterns
+                    </button>
+                    <button class="quick-btn action-button" data-action="generate-formula">
+                        ✏️ Generate Formula
+                    </button>
+                </div>
+                
+                <h4>Advanced BI Tools</h4>
+                <div class="action-grid">
+                    <button class="advanced-btn action-button advanced" data-action="create-dashboard">
+                        📊 Create Dashboard
+                    </button>
+                    <button class="advanced-btn action-button advanced" data-action="powerquery-wizard">
+                        🔄 PowerQuery
+                    </button>
+                    <button class="advanced-btn action-button advanced" data-action="dax-helper">
+                        📈 DAX Formula
+                    </button>
+                    <button class="advanced-btn action-button advanced" data-action="data-model">
+                        🏗️ Data Model
+                    </button>
+                </div>
+                
+                <h4>Advanced Analytics & ML</h4>
+                <div class="action-grid">
+                    <button class="ml-btn action-button ml" data-action="forecasting">
+                        🔮 Forecasting
+                    </button>
+                    <button class="ml-btn action-button ml" data-action="ml-analysis">
+                        🤖 ML Analysis
+                    </button>
+                    <button class="ml-btn action-button ml" data-action="advanced-viz">
+                        📈 Advanced Viz
+                    </button>
+                    <button class="ml-btn action-button ml" data-action="data-quality">
+                        ✅ Data Quality
+                    </button>
+                </div>
+                
+                <h4>Automation & Integration</h4>
+                <div class="action-grid">
+                    <button class="auto-btn action-button automation" data-action="vba-generator">
+                        ⚙️ VBA Script
+                    </button>
+                    <button class="auto-btn action-button automation" data-action="sql-generator">
+                        🗄️ SQL Query
+                    </button>
+                    <button class="auto-btn action-button automation" data-action="api-connect">
+                        🌐 API Connect
+                    </button>
+                    <button class="auto-btn action-button automation" data-action="optimize">
+                        ⚡ Optimize
+                    </button>
+                </div>
+                
+                <h4>Financial Modeling</h4>
+                <div class="action-grid">
+                    <button class="fin-btn action-button financial" data-action="dcf-model">
+                        💰 DCF Model
+                    </button>
+                    <button class="fin-btn action-button financial" data-action="scenario-analysis">
+                        📊 Scenarios
+                    </button>
+                    <button class="fin-btn action-button financial" data-action="monte-carlo">
+                        🎲 Monte Carlo
+                    </button>
+                    <button class="fin-btn action-button financial" data-action="budget-model">
+                        📋 Budget
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Function Reference -->
+            <div id="function-reference">
+                <details>
+                    <summary>Available Functions</summary>
+                    <div class="function-list">
+                        <p><strong>📊 Data Analysis:</strong></p>
+                        <p><code>=AI.ANALYZE(data, [type])</code> - Analyze data trends and patterns</p>
+                        <p><code>=AI.INSIGHTS(data, [focus])</code> - Extract business insights</p>
+                        <p><code>=AI.ANALYZE_ML(data, type, [target])</code> - Advanced statistical analysis</p>
+                        <p><code>=AI.FORECAST(data, [type], [periods])</code> - Predictive analytics</p>
+                        
+                        <p><strong>🛠️ Data Operations:</strong></p>
+                        <p><code>=AI.CLEAN(data, [instructions])</code> - Clean and format data</p>
+                        <p><code>=AI.CATEGORIZE(data, [criteria])</code> - Categorize data intelligently</p>
+                        <p><code>=AI.VALIDATE(data, [rules])</code> - Data quality assessment</p>
+                        <p><code>=AI.TRANSLATE(text, language)</code> - Translate text</p>
+                        <p><code>=AI.GENERATE(type, [rows], [params])</code> - Generate sample data</p>
+                        
+                        <p><strong>📈 Visualization & BI:</strong></p>
+                        <p><code>=AI.DASHBOARD(range, [type], [prefs])</code> - Create interactive dashboards</p>
+                        <p><code>=AI.VISUALIZE(data, type, [style])</code> - Advanced visualizations</p>
+                        
+                        <p><strong>⚡ Excel Enhancement:</strong></p>
+                        <p><code>=AI.FORMULA(description)</code> - Generate Excel formulas</p>
+                        <p><code>=AI.OPTIMIZE(target, [type])</code> - Performance optimization</p>
+                        <p><code>=AI.AUTOMATE(task, [script-type])</code> - Generate automation code</p>
+                        
+                        <p><strong>🔗 Data Integration:</strong></p>
+                        <p><code>=AI.POWERQUERY(transformation, [source])</code> - Generate PowerQuery M code</p>
+                        <p><code>=AI.SQL(description, [schema], [dialect])</code> - Generate SQL queries</p>
+                        <p><code>=AI.CONNECT(source, type, [config])</code> - API & data connections</p>
+                        
+                        <p><strong>💰 Financial Modeling:</strong></p>
+                        <p><code>=AI.DAX(description, [context])</code> - Create DAX formulas</p>
+                        <p><code>=AI.FINMODEL(type, [data], [scenarios])</code> - Financial models</p>
+                    </div>
+                </details>
+            </div>
+        </section>
+    </div>
+    
+    <!-- Load task pane script -->
+    <script type="module" src="taskpane-enhanced.ts"></script>
+</body>
+</html>
