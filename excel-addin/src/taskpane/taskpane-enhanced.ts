@@ -8,6 +8,9 @@ import { aiService, sharedState } from '../services/ai-service';
 import { ExcelHelpers } from '../utils/excel-helpers';
 import { DashboardBuilder } from '../utils/dashboard-builder';
 import { DialogManager } from '../utils/dialog-manager';
+import { SmartDetectionPanel } from './components/smart-detection-panel';
+import { WorkflowDesigner } from './components/workflow-designer';
+import { AdvancedExcelPanel } from './components/advanced-excel-panel';
 
 /* global Excel, Office */
 
@@ -45,6 +48,9 @@ let currentUser: any = null;
 let dialogManager: DialogManager;
 let dashboardBuilder: DashboardBuilder;
 let excelHelpers: ExcelHelpers;
+let smartDetectionPanel: SmartDetectionPanel;
+let workflowDesigner: WorkflowDesigner;
+let advancedExcelPanel: AdvancedExcelPanel;
 
 /**
  * Initialize the task pane when Office is ready
@@ -86,6 +92,11 @@ async function initializeTaskPane() {
   dialogManager = new DialogManager();
   dashboardBuilder = new DashboardBuilder();
   excelHelpers = new ExcelHelpers();
+  
+  // Initialize feature panels
+  smartDetectionPanel = new SmartDetectionPanel('smart-feature');
+  workflowDesigner = new WorkflowDesigner('workflow-feature');
+  advancedExcelPanel = new AdvancedExcelPanel('advanced-feature');
 
   // Set up event listeners
   setupEventListeners();
@@ -157,6 +168,15 @@ function setupEventListeners() {
     btn.addEventListener('click', (e) => {
       const action = (e.target as HTMLElement).dataset.action;
       if (action) handleFinancialAction(action);
+    });
+  });
+  
+  // Feature tab switching
+  const featureTabs = document.querySelectorAll('.feature-tab');
+  featureTabs.forEach(tab => {
+    tab.addEventListener('click', (e) => {
+      const targetFeature = (e.target as HTMLElement).dataset.feature;
+      if (targetFeature) switchFeatureTab(targetFeature);
     });
   });
 }
@@ -689,4 +709,29 @@ function showMessage(text: string, type: 'info' | 'success' | 'error') {
   setTimeout(() => {
     ui.messageDiv.style.display = 'none';
   }, 5000);
+}
+
+/**
+ * Switch between feature tabs
+ */
+function switchFeatureTab(feature: string) {
+  // Update tab buttons
+  const tabs = document.querySelectorAll('.feature-tab');
+  tabs.forEach(tab => {
+    if ((tab as HTMLElement).dataset.feature === feature) {
+      tab.classList.add('active');
+    } else {
+      tab.classList.remove('active');
+    }
+  });
+  
+  // Update content panels
+  const panels = document.querySelectorAll('.feature-panel');
+  panels.forEach(panel => {
+    if (panel.id === `${feature}-feature`) {
+      panel.classList.add('active');
+    } else {
+      panel.classList.remove('active');
+    }
+  });
 }

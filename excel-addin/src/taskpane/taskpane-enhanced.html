@@ -13,7 +13,7 @@
     <link rel="stylesheet" href="https://static2.sharepointonline.com/files/fabric/office-ui-fabric-core/11.0.0/css/fabric.min.css" />
     
     <!-- Task pane CSS -->
-    <link rel="stylesheet" href="taskpane.css" />
+    <link rel="stylesheet" href="taskpane-enhanced.css" />
 </head>
 <body class="ms-font-m ms-Fabric">
     <div id="container">
@@ -69,8 +69,18 @@
                 </div>
             </div>
             
-            <!-- Quick Actions -->
-            <div id="quick-actions">
+            <!-- Feature Tabs -->
+            <div class="feature-tabs">
+                <button class="feature-tab active" data-feature="chat">AI Chat</button>
+                <button class="feature-tab" data-feature="smart">Smart Detection</button>
+                <button class="feature-tab" data-feature="workflow">Workflows</button>
+                <button class="feature-tab" data-feature="advanced">Advanced Excel</button>
+            </div>
+            
+            <div class="feature-content">
+                <!-- AI Chat Feature -->
+                <div id="chat-feature" class="feature-panel active">
+                    <!-- Quick Actions -->
                 <h4>Quick Actions</h4>
                 <div class="action-grid">
                     <button class="quick-btn action-button" data-action="analyze-selection">
@@ -189,6 +199,23 @@
                         <p><code>=AI.FINMODEL(type, [data], [scenarios])</code> - Financial models</p>
                     </div>
                 </details>
+            </div>
+                </div>
+                
+                <!-- Smart Detection Feature -->
+                <div id="smart-feature" class="feature-panel">
+                    <!-- Will be populated by smart-detection-panel.ts -->
+                </div>
+                
+                <!-- Workflow Designer Feature -->
+                <div id="workflow-feature" class="feature-panel">
+                    <!-- Will be populated by workflow-designer.ts -->
+                </div>
+                
+                <!-- Advanced Excel Feature -->
+                <div id="advanced-feature" class="feature-panel">
+                    <!-- Will be populated by advanced-excel-panel.ts -->
+                </div>
             </div>
         </section>
     </div>
