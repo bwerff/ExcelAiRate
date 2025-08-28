@@ -33,7 +33,7 @@ const CONFIG = {
   SUPABASE_ANON_KEY: import.meta.env.VITE_SUPABASE_ANON_KEY || '',
   MODEL_PRIMARY: 'gpt-4o-mini',
   MODEL_FALLBACK: 'gpt-3.5-turbo',
-  MAX_TOKENS: 500,
+  MAX_TOKENS: 5000,
   TEMPERATURE: 0.3,
   CACHE_DURATION: 300000, // 5 minutes
   MAX_RETRIES: 3,
